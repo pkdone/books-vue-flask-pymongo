@@ -145,12 +145,14 @@ npm run build
 [Unit]
 Description=Gunicorn instance to serve books Flask Python project
 After=network.target
+
 [Service]
 User=mainuser
 Group=www-data
 WorkingDirectory=/home/mainuser/books-vue-flask-pymongo/app-tier
 Environment="PATH=/home/mainuser/.local/bin"
 ExecStart=/home/mainuser/.local/bin/gunicorn --workers 4 --threads 3 --bind unix:booksnginxgunicorn.sock -m 000 BooksRestApp:app
+
 [Install]
 WantedBy=multi-user.target
 ```
