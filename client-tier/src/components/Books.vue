@@ -203,7 +203,7 @@ export default {
       this.getSubSetOfBooks(0, isAfterDelete);
     },
     getSubSetOfBooks(toskip, isAfterDelete) {
-      const path = 'http://localhost:5000/books';
+      const path = `${process.env.VUE_APP_REST_API_LOCATION}/books`;
       let newskip = this.start + toskip;
       if (newskip < 0) newskip = 0;
       const findparams = { skip: newskip, limit: this.limit, sortasc: 'author' };
@@ -226,7 +226,7 @@ export default {
         });
     },
     addBook(payload) {
-      const path = 'http://localhost:5000/books';
+      const path = `${process.env.VUE_APP_REST_API_LOCATION}/books`;
       axios.post(path, payload)
         .then(() => {
           this.getBooks(false);
@@ -240,7 +240,7 @@ export default {
         });
     },
     removeBook(bookID) {
-      const path = `http://localhost:5000/books/${bookID}`;
+      const path = `${process.env.VUE_APP_REST_API_LOCATION}/books/${bookID}`;
       axios.delete(path)
         .then(() => {
           this.getBooks(true);
@@ -254,7 +254,7 @@ export default {
         });
     },
     updateBook(payload, bookID) {
-      const path = `http://localhost:5000/books/${bookID}`;
+      const path = `${process.env.VUE_APP_REST_API_LOCATION}/books/${bookID}`;
       axios.put(path, payload)
         .then(() => {
           this.getBooks(false);

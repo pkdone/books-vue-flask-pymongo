@@ -1,20 +1,15 @@
 #!/usr/bin/python3
 ##
-# TODO. SPA - single page application
-#
-# TODO: Set .env var
+# Flask/Python server providing a REST API to access book data
 #
 # For usage run first ensure the '.py' script is executable and then run:
-#  $ ./TODO.py -h
+#  $ ./BooksRestApp.py
 #
-# Example (connecting to an Atlas cluster):
-#  $ ./TODO.py -u 'mongodb+srv://main_user:pwd@devtuesreportcluster-s703u.mongodb.net'
-#
-# Prerequisite:
-# * Install tools
-#   TODO
+# Prerequisites:
+# * Change the MongoDB ULR in the .env file to point to a running MongoDB database, e.g.:
+#  MONGODB_URL="mongodb://localhost:27017"
 # * Install Python library depedencies
-#  $ pip3 install --user pymongo, dnspython, python-dotenv, flask
+#  $ pip3 install --user pymongo dnspython python-dotenv Flask Flask-Cors
 ##
 import logging
 from os import environ
@@ -144,4 +139,4 @@ def single_book(book_id):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=5000)
