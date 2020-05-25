@@ -62,7 +62,7 @@ npm install
 
 1. Run the following command which uses the Mongo Shell to insert a sample set of book records into the database (first __change__ the MongoDB URL argument to match the location of the running MongoDB database):
 ```bash
-mongo mongodb://localhost:27017 ./book-data-to-insert.js
+mongo mongodb://localhost:27017 rawdata/book-data-to-insert.js
 ```
 
 ### Project Environment Configuration
@@ -154,7 +154,7 @@ npm run build
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_NOTE:_ If the host of the app for production is not `http://localhost`, first change the `VUE_APP_REST_API_LOCATION` variable in the file `client-tier\.env.production.local` before running the build process above.
 
-2. Create an OS service configuration file for running Gunicorn to run the Flask/Python app-tier logic automatically on the host machine, by editing a new file at `/etc/systemd/system/gunicorn-flask-books.service` (__change__ every occurrence of the text _mainuser_ in the service's config file to match your local OS user name, e.g. _jdoe_, plus change the _WorkingDirectory_ field if the project's location differs):
+2. Create an OS service configuration file for running Gunicorn to run the Flask/Python app-tier logic automatically on the host machine, by editing a new file at `/etc/systemd/system/gunicorn-flask-books.service` (__change__ every occurrence of the text _mainuser_ in the service's config file to match your local OS user name, e.g. _jdoe_, change the _WorkingDirectory_ field if the project's location differs, and change the argument for the `workers` parameter if a different number of Flask worker processes should be spawned by Gunicorn):
 ```apache
 [Unit]
 Description=Gunicorn instance to serve books Flask Python project
