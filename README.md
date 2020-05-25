@@ -102,7 +102,7 @@ npm run serve
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_NOTE:_ If the host of the app during development is not `http://localhost`, first change the `VUE_APP_REST_API_LOCATION` variable in the file `client-tier\.env.development.local` before running the developer server above.
 
-5. In a browser, test the client-tier user interface works ok and hows data by navigating to:
+5. In a browser, test the client-tier user interface works ok and shows data by navigating to:
 http://localhost:8080/
 
 6. __OPTIONAL__: Wrapping Flask with Gunicorn - this is an optional test you can do in development or alternatively don't bother and just wait to configure Gunicorn during the Production phase later. 
@@ -122,7 +122,7 @@ http://localhost:8080/
 
 ### PRODUCTION Phase
 
-__NOTE:__ Before running the Production phase steps, first stop the Flask (or Gunicorn) process that was listening on port 5000 and stop the Node.js process that was listening on port 8080, they have been running.
+__NOTE:__ Before running the Production phase steps, first stop the Flask (or Gunicorn) process that was listening on port 5000 and stop the Node.js process that was listening on port 8080, if they have been running.
  
 &nbsp;
 
@@ -214,12 +214,12 @@ sudo service nginx restart
 
 #### PRODUCTION OPTION 2: Containerised Production Server
 
+__NOTE__: If you will be referencing a MongoDB server running on your local host machine (e.g. your laptop) that is also going to host the container, ensure the MongoDB database was started as listening on all local addresses (i.e. including the IP address of the _docker0_, or similar, Docker network device) and ensure the local machine's firewall (if present and enabled) allows the MongoDB host/port to be accessed from non-localhost locations (i.e. accessible from containers which will have a different network address).
+
 1. Edit the `client-tier/.env.production.local` file, setting the value of the `VUE_APP_REST_API_LOCATION` variable to the IP address (or hostname) that the subsequently launched Docker container will be bound to, for example: 
 ```bash
 VUE_APP_REST_API_LOCATION=http://172.17.0.2:5000/
 ```
-
-&nbsp;&nbsp;&nbsp;__NOTE__: If you are referencing a MongoDB server running on your local host machine (e.g. your laptop) that is also going to host the container, ensure the MongoDB database was started as listening on all local addresses (i.e. including the IP address of the _docker0_, or similar, Docker network device) and ensure the local machine's firewall (if present and enabled) allows the MongoDB host/port to be accessed from non-localhost locations (i.e. accessible from the container which will have a different network address).
 
 2. Generate the Webpack set of static client tier content, ready to be served by a containerised web server (by default this set of generated static resources is placed in the `dist` sub-folder of the `client-tier` folder):
 ```bash
