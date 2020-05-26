@@ -1,5 +1,8 @@
 FROM nginx
 
+#
+# Install additional Python, PIP, PyMongogo, Gunicorn & Flask libraries
+#
 RUN set -x \
     && apt-get update -y \
     && apt-get install -y \
@@ -18,11 +21,18 @@ RUN set -x \
         gunicorn \
     && rm -rf /root/.cache/pip
 
+#
+# Configure Nginx to support proxying requests
+#
 RUN echo "proxy_set_header Host \$http_host;\n\
 proxy_set_header X-Real-IP \$remote_addr;\n\
 proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;\n\
 proxy_set_header X-Forwarded-Proto \$scheme;" > /etc/nginx/proxy_params
 
+#
+# Configure the Nginx port 5000 site for servicing the static content webpack from the '/' URL and
+# proxying to the Gunicorn/Flask/Python REST API from the '/books' URL
+#
 RUN echo "server {\n\
     listen      5000;\n\
     server_name localhost;\n\
@@ -39,9 +49,18 @@ RUN echo "server {\n\
     }\n\
 }" > /etc/nginx/conf.d/default.conf
 
+#
+# Set the environment variables expected by the Python code including the default URL of the remote
+# MongoDB database to connect to
+#
 RUN echo "FLASK_ENV=\"production\"\n\
 MONGODB_URL=\"mongodb://172.17.0.1:27017\"" > /.env
 
+#
+# Create the Docker entrypoint script to attempt to pick up the URL of the MongoDB database and the
+# number of worker processes to  run, passed to the container as an environment variables, plus to
+# launch the Gunicron processes to run Flask/Python before launching the main NGinx web server
+# process.
 RUN echo "#!/bin/bash\n\
 set -e\n\
 \n\
@@ -61,13 +80,16 @@ fi\n\
 /usr/sbin/nginx -g \"daemon off;\"" > /docker-entrypoint.sh \
     && chmod u+x /docker-entrypoint.sh
 
+#
+# Copy over the Vue.js webpack and the Python code, ready to be served/run
+#
 COPY client-tier/dist /usr/share/nginx/html
-
 COPY app-tier/BooksRestApp.py /BooksRestApp.py
-
 COPY app-tier/BooksMgr.py /BooksMgr.py
 
+#
+# Ensure the entrypoint script will run on startup and expose the port NGinx will then listen on
+#
 ENTRYPOINT ["/docker-entrypoint.sh"]
-
 EXPOSE 5000
 

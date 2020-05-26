@@ -221,13 +221,15 @@ __NOTE__: If you will be referencing a MongoDB server running on your local host
 VUE_APP_REST_API_LOCATION=http://172.17.0.2:5000/
 ```
 
+&nbsp;&nbsp;&nbsp;__NOTE__: If you unable to work out, ahead of time, what the IP address of the container will be in your environmnet, just use the example IP address shown above for the moment, and then once you've run step 4 below, follow _TIP 3_ shown in step 4, to see what the IP address really is. Then stop the running container (_TIP 4_) and return to this step 1 to change the value of `VUE_APP_REST_API_LOCATION`, before executing all subsequent steps again (steps 2 and onwards).
+
 2. Generate the Webpack set of static client tier content, ready to be served by a containerised web server (by default this set of generated static resources is placed in the `dist` sub-folder of the `client-tier` folder):
 ```bash
 cd client-tier
 npm run build
 ```
 
-3. Build the new Docker image, `booksnginxgunicorn`, which will contain the fully configured _Vue.js / Webpack / Nginx / REST / Gunicorn /Flask / Python_ application (this process will use the file _Dockerfile_ located in the root of this project):
+3. Build the new Docker image, `booksnginxgunicorn`, which will contain the fully configured _Vue.js / Webpack / Nginx / REST / Gunicorn /Flask / Python_ application (this process will use the file _Dockerfile_ located in the root of this project - ensure you include the end . [dot] as part of the command):
 ```bash
 sudo docker build -t booksnginxgunicorn .
 ```
@@ -239,7 +241,8 @@ sudo docker run -e "MONGODB_URL=mongodb://172.17.0.1:27017" -e "WORKER_PROCESSES
 
  * _TIP 1:_ To view the logs output by the initiated Docker container instance, run: `sudo docker logs -t booksnginxgunicorn`
  * _TIP 2:_ To open a terminal/shell directly inside the running Docker container instance, run: `sudo docker exec -it booksnginxgunicorn bash`
- * _TIP 3:_ To stop and remove the initiated Docker container instance, run: `sudo docker rm -f booksnginxgunicorn`
+ * _TIP 3:_ To get the IP address of the running Docker container instance, run: `sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' booksnginxgunicorn`
+ * _TIP 4:_ To stop and remove the initiated Docker container instance, run: `sudo docker rm -f booksnginxgunicorn`
 
 
 5. In a browser, check that the Python books REST API still works (now served by Nginx proxying to Gunicorn, which in turn is wrapping Flask), check that the client user interface is now served as static content from the Nginx web server (now served from the same port 5000 rather than port 8080, and from the container's IP address), and ensure this is able to invoke the REST API and display the books data in the browser. For example navigate to the following URLs if the Docker container is listening on `172.17.0.2`:
