@@ -78,7 +78,7 @@ Follow the __DEVELOPMENT Phase__ instructions below to try, test, change and enh
 
 ### DEVELOPMENT Phase
 
-1. Edit the `.env` file in the root of the project, setting the value of the `FLASK_ENV` variable to `development` (which will aid rapid prototyping) and the value of the `MONGODB_URL` variable to match the location of the running development MongoDB database. For example: 
+1. Edit the `app-tier/.env` file, setting the value of the `FLASK_ENV` variable to `development` (which will aid rapid prototyping) and the value of the `MONGODB_URL` variable to match the location of the running development MongoDB database. For example: 
 ```bash
 FLASK_ENV="development"
 MONGODB_URL="mongodb://localhost:27017"
@@ -128,7 +128,7 @@ __NOTE:__ Before running the Production phase steps, first stop the Flask (or Gu
 
 #### PRODUCTION OPTION 1: Non-Containerised Production Server
 
-1. Edit the `.env` file in the root of the project, setting the value of the `FLASK_ENV` variable to `production` and the value of the `MONGODB_URL` variable to match the location of the running production MongoDB database. For example: 
+1. Edit the `app-tier/.env` file, setting the value of the `FLASK_ENV` variable to `production` and the value of the `MONGODB_URL` variable to match the location of the running production MongoDB database. For example: 
 ```bash
 FLASK_ENV="production"
 MONGODB_URL="mongodb://localhost:27017"

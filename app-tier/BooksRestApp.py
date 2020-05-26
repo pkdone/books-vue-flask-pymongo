@@ -54,11 +54,11 @@ def init_app():
         logging.getLogger('werkzeug').setLevel(logging.WARNING)
 
         if mode == FLASK_DEV_MODE:
-            logging.warn(f"App has been started in '{FLASK_PROD_MODE}' mode but local '.env' "
-                         f"file's 'FLASK_ENV_VAR' variable is set to '{FLASK_DEV_MODE}' mode - "
-                         f"this is fine for a Development environment, to support cross-origin "
-                         f"resource sharing (CORS) but be sure to change the variable's value "
-                         f"before running this in a Production environment")
+            logging.warning(f"App has been started in '{FLASK_PROD_MODE}' mode but local '.env' "
+                            f"file's 'FLASK_ENV_VAR' variable is set to '{FLASK_DEV_MODE}' mode - "
+                            f"this is fine for a Development environment, to support cross-origin "
+                            f"resource sharing (CORS) but be sure to change the variable's value "
+                            f"before running this in a Production environment")
 
     return app
 
@@ -139,4 +139,4 @@ def single_book(book_id):
 
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(host='0.0.0.0 ', port=5000)
