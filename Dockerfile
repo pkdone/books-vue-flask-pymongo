@@ -1,3 +1,6 @@
+#
+# Use the Nginx web server / Debian 10 base image
+# 
 FROM nginx
 
 #
@@ -60,7 +63,8 @@ MONGODB_URL=\"mongodb://172.17.0.1:27017\"" > /.env
 # Create the Docker entrypoint script to attempt to pick up the URL of the MongoDB database and the
 # number of worker processes to  run, passed to the container as an environment variables, plus to
 # launch the Gunicron processes to run Flask/Python before launching the main NGinx web server
-# process.
+# process
+#
 RUN echo "#!/bin/bash\n\
 set -e\n\
 \n\
