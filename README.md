@@ -2,7 +2,7 @@
 
 An example full stack application, primarily developed in Python, which displays a sample set of books related to [Post-Apocalyptic fiction](https://en.wikipedia.org/wiki/Apocalyptic_and_post-apocalyptic_fiction) and enables these to be edited.
 
- ![Books App User Interface](img/appui.png)
+ ![Books App User Interface](docs/appui.png)
 
 ### Main Goals
 
@@ -15,7 +15,7 @@ An example full stack application, primarily developed in Python, which displays
 
 To achieve these goals, the component stack shown in the diagram below has been adopted, with differences between the development and production environments. The development environment allows rapid prototyping with a single instance of a Python application and an auto-checked and auto-generated web user interface. The production environment provides a more scalable multi-process solution and completely eliminates server-side JavaScript and Node.js from the runtime, without any code changes.
 
- ![Full Stack Architecture](img/architecture.png)
+ ![Full Stack Architecture](docs/architecture.png)
 
 Further details on some of the components
 
@@ -34,7 +34,7 @@ Further details on some of the components
 * These instructions assume the host OS is Ubuntu 20.40 - most of the steps should be easily transferable to other OSes but some minor tweaks may be required
 * If the option of running the application via a Docker container is to be used, ensure the local OS has [Docker](https://docs.docker.com/get-docker/) already installed and running
 
-_NOTE_: See [here](how-created.md) for details on how the original _skeleton_ outline for the client-tier Vue.js part of the project was created.
+_NOTE_: See [here](docs/how-created.md) for details on how the original _skeleton_ outline for the client-tier Vue.js part of the project was created.
 
 ### Software Installation
 
