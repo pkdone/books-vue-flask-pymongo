@@ -155,7 +155,7 @@ User=mainuser
 Group=www-data
 WorkingDirectory=/home/mainuser/books-vue-flask-pymongo/app-tier
 Environment="PATH=/home/mainuser/.local/bin"
-ExecStart=/home/mainuser/.local/bin/gunicorn --workers 4 --threads 2 --bind unix:booksnginxgunicorn.sock -m 000 BooksRestApp:app
+ExecStart=/home/mainuser/.local/bin/gunicorn --workers 4 --threads 2 --bind unix:booksnginxgunicorn.sock -m 007 BooksRestApp:app
 
 [Install]
 WantedBy=multi-user.target
@@ -258,5 +258,5 @@ sudo docker run -e "MONGODB_URL=mongodb://172.17.0.1:27017" -e "WORKER_PROCESSES
 
 * Secure application with TLS and a Server certificate
 * Load test the Gunicorn/Flask/Python REST API to determine what throughput and average response latency is achievable
-* In the Gunicorn's OS service config, avoid the use of the file mask '000' for the Unix domain socket
+* In the Gunicorn's OS service config, avoid the use of the file [mask](https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04) '000' for the Unix domain socket
 
