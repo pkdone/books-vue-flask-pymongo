@@ -54,7 +54,7 @@ pip3 install --user pymongo dnspython python-dotenv Flask Flask-Cors gunicorn
 sudo npm install -g @vue/cli
 ```
 
-3. Install the project-local required Node.js libraries/tools (note, the dependencies are declared in the `package.json` file):
+4. Install the project-local required Node.js libraries/tools (note, the dependencies are declared in the `package.json` file):
 ```bash
 cd client-tier
 npm install
