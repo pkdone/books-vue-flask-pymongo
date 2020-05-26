@@ -9,19 +9,19 @@ An example full stack application, primarily developed in Python, which displays
 * Provide an example of an easy way to develop a full stack application, for developers who prefer using Python, without needing to use JavaScript to develop the app-tier logic or needing to leverage Node.js to run the application in Production. 
 * Enable the app-tier to be scalable, with a simple non-invasive way of leveraging multiple host server cores/processes, without being constrained by Python's Global Interpreter Lock (GIL), in a way that enables the developer to just focus on writing normal Python code.
 * Host the data-tier on a [MongoDB](https://www.mongodb.com/) database for flexibility, high availability, scalability and portability reasons.
-* Use JavaScript in the client-tier, in the browser where JavaScript shines, to avoid server-side rendering of the user interface, to provide a more responsive and smooth user experience, realised as a Single Page Application ([SPA](https://en.wikipedia.org/wiki/Single-page_application)) and loaded into the browser as a set of static resources (bundled as a [Webpack](https://webpack.js.org/)).
+* Use JavaScript in the client-tier, in the browser where JavaScript shines, to avoid server-side rendering of the user interface and to provide a more responsive and smooth user experience, realised as a Single Page Application ([SPA](https://en.wikipedia.org/wiki/Single-page_application)) and loaded into the browser as a set of static resources (bundled as a [Webpack](https://webpack.js.org/)).
  
 ### Application Architecture
 
-To achieve these goals, the component stack shown in the diagram below has been adopted, with differences between the development and production environments. The development environment allows rapid prototyping with a single instance of a Python application and an auto-checked and auto-generated web user interface. The production environment provides a more scalable multi-process solution and completely eliminates server-side JavaScript and Node.js from the runtime.
+To achieve these goals, the component stack shown in the diagram below has been adopted, with differences between the development and production environments. The development environment allows rapid prototyping with a single instance of a Python application and an auto-checked and auto-generated web user interface. The production environment provides a more scalable multi-process solution and completely eliminates server-side JavaScript and Node.js from the runtime, without any code changes.
 
  ![Full Stack Architecture](img/architecture.png)
 
 Further details on some of the components
 
-* __[Vue.js](https://vuejs.org/)__: A JavaScript framework for building user interfaces as Single Page Applications that, in production, is served as a set of static HTML/JavaScript/PNG/CSS resources to run inside the browser, requiring no server-side rendering. Node.js is used during the development phase only to check for issues and to dynamically generate the content for quick prototyping
+* __[Vue.js](https://vuejs.org/)__: A JavaScript framework for building a user interface as Single Page Applications that, in production, is served as a set of static HTML/JavaScript/PNG/CSS resources to run inside the browser, requiring no server-side rendering. Node.js is used during the development phase only, to check for issues and to dynamically generate the content for quick prototyping
 * __[Flask](https://flask.palletsprojects.com/en/1.1.x/)__: A lightweight single process Python micro web framework for dynamically generating server-side rendered web applications, or, in this case, APIs such as REST APIs.
-* __[Gunicorn](https://gunicorn.org/)__: A Python Web Server Gateway Interface ([WSGI](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface)) which is able to fork and manage multiple host processes to each run a copy of single-process Python server frameworks like _Flask_. Via WSGI, integrates with common web servers like Apache and Nginx to enable those web servers to reverse proxy URL requests through to the Python business logic running in each Gunicorn spawned process.
+* __[Gunicorn](https://gunicorn.org/)__: A Python Web Server Gateway Interface ([WSGI](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface)) which is able to fork and manage multiple host processes to each run a copy of single-process Python server frameworks like _Flask_. Via WSGI, integrates with common web servers like Apache and Nginx to enable those web servers to reverse proxy and load balance URL requests through to the Python business logic running in each Gunicorn spawned process.
 * __[Nginx](https://www.nginx.com/)__: An HTTP web server for serving static websites or, acting as a reverse proxy / load balancer, serving dynamically generated content & exposing  request/response APIs. In this project it is used for both roles: to serve the static HTML files, JavaScript client-side libraries plus other resources, and to expose a REST API proxied through Gunicorn & Flask
 
 &nbsp;
@@ -31,8 +31,8 @@ Further details on some of the components
 ### Prerequisites/Assumptions
 
 * A MongoDB database is already [installed](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/) or running somewhere (e.g. a local single instance, a remote self-managed cluster or an [Atlas](https://www.mongodb.com/cloud/atlas) cluster in the public cloud)
-* These instructions assume the host OS is Ubuntu 20.40 - most of the steps should be easily transferrable to other OSess but some changes may be required
-* If the option of running the app via a Docker container is to be used, ensure the local OS has [Docker](https://docs.docker.com/get-docker/) already installed and running
+* These instructions assume the host OS is Ubuntu 20.40 - most of the steps should be easily transferable to other OSes but some minor tweaks may be required
+* If the option of running the application via a Docker container is to be used, ensure the local OS has [Docker](https://docs.docker.com/get-docker/) already installed and running
 
 _NOTE_: See [here](how-created.md) for details on how the original _skeleton_ outline for the client-tier Vue.js part of the project was created.
 
@@ -43,7 +43,7 @@ _NOTE_: See [here](how-created.md) for details on how the original _skeleton_ ou
 sudo apt install python3 python3-pip nodejs npm nginx
 ```
 
-2. Ensure the location `~/.local/bin` is on the OS user's path (__change__ _mainuser_ to your local user name) by editing `.bashrc` (restart the terminal afterwards to pick up this change):
+2. Ensure the location `~/.local/bin` is on the OS user's path (__change__ _mainuser_ to your local OS user name) by editing `.bashrc` (restart the terminal afterwards to pick up this change):
 ```bash
 export PATH=/home/mainuser/.local/bin:$PATH
 ```
@@ -54,7 +54,7 @@ pip3 install --user pymongo dnspython python-dotenv Flask Flask-Cors gunicorn
 sudo npm install -g @vue/cli
 ```
 
-3. Install the project-local required Node.js libraries/tools (dependencies are declared in the `package.json` file):
+3. Install the project-local required Node.js libraries/tools (note, the dependencies are declared in the `package.json` file):
 ```bash
 cd client-tier
 npm install
@@ -71,7 +71,7 @@ mongo mongodb://localhost:27017 rawdata/book-data-to-insert.js
 
 # Running the application
 
-Follow the __DEVELOPMENT Phase__ instructions below to change and enhance the running application in development mode with easy debugging. Follow the __PRODUCTION Phase__ instructions to deploy this in a production-like way, where debugging plus auto-regeneration of the client-tier resources are disabled and with the Python REST API being served from multiple server-side processes, for increased throughput and scale. There are two options for the PRODUCTION Phase (just choose one): __1)__ Non-Containerised Production Server (run the app directly from the host OS), or __2)__ Containerised Production Server (run the app from within a Docker container)
+Follow the __DEVELOPMENT Phase__ instructions below to try, test, change and enhance the running application in development mode with easy debugging. Follow the __PRODUCTION Phase__ instructions to deploy this in a production-like way, where debugging plus auto-regeneration of the client-tier resources are disabled and with the Python REST API being served from multiple server-side processes, for increased throughput and scale. There are two options for the PRODUCTION Phase (just choose one): __1)__ Non-Containerised Production Server (run the application directly from the host OS), or __2)__ Containerised Production Server (run the application from within a Docker container)
 
 
 &nbsp;
@@ -100,7 +100,7 @@ cd client-tier
 npm run serve
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_NOTE:_ If the host of the app during development is not `http://localhost:5000`, first change the `VUE_APP_REST_API_LOCATION` variable in the file `client-tier\.env.development.local` before running the developement server above.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_NOTE:_ If the host of the REST app-tier during development is not served from `http://localhost:5000`, first change the `VUE_APP_REST_API_LOCATION` variable in the file `client-tier\.env.development.local` before running the development server above.
 
 5. In a browser, test the client-tier user interface works ok and shows data by navigating to:
 http://localhost:8080/
@@ -134,7 +134,7 @@ FLASK_ENV="production"
 MONGODB_URL="mongodb://localhost:27017"
 ```
 
-&nbsp;&nbsp;&nbsp;__NOTE__: This will have the resulting effect of preventing the Node.js server, if it was still running, from being able to properly serve the development version of the client-tier app. This is because, for security reasons, the browser will prevent access to the app-tier REST API because CORS has now been disabled by having set the `FLASK_ENV` variable to `production`
+&nbsp;&nbsp;&nbsp;__NOTE__: This will have the resulting affect of preventing the Node.js server, if it was still running, from being able to properly serve the development version of the client-tier app. This is because, for security reasons, the browser will prevent access to the app-tier REST API (which is on a different host/port combination than the Node.js server) because CORS has now been disabled by having set the `FLASK_ENV` variable to `production`
 
 2. Generate the Webpack set of static client tier content, ready to be served by a web server in a subsequent step (by default this set of generated static resources is placed in the `dist` sub-folder of the `client-tier` folder):
 ```bash
@@ -142,7 +142,7 @@ cd client-tier
 npm run build
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_NOTE:_ If the host of the app for production is not `http://localhost:5000`, first change the `VUE_APP_REST_API_LOCATION` variable in the file `client-tier\.env.production.local` before running the build process above.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_NOTE:_ If the host of the REST app-tier for production is not served from `http://localhost:5000`, first change the `VUE_APP_REST_API_LOCATION` variable in the file `client-tier\.env.production.local` before running the build process above.
 
 3. Create an OS service configuration file for running Gunicorn to, in turn, run the Flask/Python app-tier logic automatically on the host machine, by editing a new file at `/etc/systemd/system/gunicorn-flask-books.service` (__change__ every occurrence of the text _mainuser_ in the service's config file to match your local OS user name, e.g. _jdoe_, change the _WorkingDirectory_ field if the project's location differs, and change the argument for the `workers` parameter if a different number of Flask worker processes should be spawned by Gunicorn):
 ```apache
@@ -155,7 +155,7 @@ User=mainuser
 Group=www-data
 WorkingDirectory=/home/mainuser/books-vue-flask-pymongo/app-tier
 Environment="PATH=/home/mainuser/.local/bin"
-ExecStart=/home/mainuser/.local/bin/gunicorn --workers 4 --threads 3 --bind unix:booksnginxgunicorn.sock -m 000 BooksRestApp:app
+ExecStart=/home/mainuser/.local/bin/gunicorn --workers 4 --threads 2 --bind unix:booksnginxgunicorn.sock -m 000 BooksRestApp:app
 
 [Install]
 WantedBy=multi-user.target
@@ -169,12 +169,12 @@ sudo systemctl status gunicorn-flask-books
 journalctl -u gunicorn-flask-books
 ```
 
-5. Disable the default site for Nginx (which listens to port 80), by removing the symbolic link:
+5. Disable the default site for Nginx (which listens to port 80), by removing the symbolic link for it:
 ```bash
 sudo rm /etc/nginx/sites-enabled/default
 ```
 
-6. Create a new Nginx site definition for port 5000 which will do two things: __1)__ Serve the Vue.js static content webpack for the root '/' URL of this site, and __2)__ Proxy HTTP requests for the URL beginning '/books' of this site to the Gunicorn/Flask/Python REST API app-tier code - edit the new file at `/etc/nginx/sites-available/books-vue-flask-pymongo` (__change__ every occurrence of the text _mainuser_ in the web server config file to match your local OS user name, e.g. _jdoe_, and change the 3 places that reference the path of the project's folder, if the project's location differs):
+6. Create a new Nginx site definition for port 5000 which will do two things: __1)__ Serve the Vue.js static content webpack for request from the root '/' URL of this site, and __2)__ Proxy HTTP requests for the URL beginning '/books' of this site to the Gunicorn/Flask/Python REST API app-tier code - edit the new file at `/etc/nginx/sites-available/books-vue-flask-pymongo` (__change__ every occurrence of the text _mainuser_ in the web server config file to match your local OS user name, e.g. _jdoe_, and change the 3 places that reference the path of the project's folder, if the project's location differs):
 ```nginx
 server {
     listen      5000;
@@ -232,13 +232,13 @@ npm run build
 sudo docker build -t booksnginxgunicorn .
 ```
 
-4. Run the newly built Docker container which will start both the Gunicorn/Flask process and the Nginx process (__first change__ the shown values below for the container environment variables `MONGODB_URL` and `WORKER_PROCESSES` to reference the location of the externally running MongoDB database accessible via the container's network and to the number of OS processes to be spawned by Gunicorn to run Flask, respectively):
+4. Run the newly built Docker container which will start both the Gunicorn/Flask process and the Nginx process (__first change__ the shown values below for the container environment variables `MONGODB_URL` and `WORKER_PROCESSES` to reference the location of the externally running MongoDB database accessible via the container's network and to define the number of OS processes to be spawned by Gunicorn to run Flask, respectively):
 ```bash
 sudo docker run -e "MONGODB_URL=mongodb://172.17.0.1:27017" -e "WORKER_PROCESSES=2" --name booksnginxgunicorn -d booksnginxgunicorn
 ```
 
  * _TIP 1:_ To view the logs output by the initiated Docker container instance, run: `sudo docker logs -t booksnginxgunicorn`
- * _TIP 2:_ To open a command shell directly inside the running Docker container instance, run: `sudo docker exec -it booksnginxgunicorn bash`
+ * _TIP 2:_ To open a terminal/shell directly inside the running Docker container instance, run: `sudo docker exec -it booksnginxgunicorn bash`
  * _TIP 3:_ To stop and remove the initiated Docker container instance, run: `sudo docker rm -f booksnginxgunicorn`
 
 
@@ -255,5 +255,5 @@ sudo docker run -e "MONGODB_URL=mongodb://172.17.0.1:27017" -e "WORKER_PROCESSES
 
 * Secure application with TLS and a Server certificate
 * Load test the Gunicorn/Flask/Python REST API to determine what throughput and average response latency is achievable
-* In the Gunicorn's OS service config, avoid the use of the file mask '000' for the domain socket
+* In the Gunicorn's OS service config, avoid the use of the file mask '000' for the Unix domain socket
 
