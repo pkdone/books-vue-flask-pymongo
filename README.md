@@ -258,5 +258,4 @@ sudo docker run -e "MONGODB_URL=mongodb://172.17.0.1:27017" -e "WORKER_PROCESSES
 
 * Secure application with TLS and a Server certificate
 * Load test the Gunicorn/Flask/Python REST API to determine what throughput and average response latency is achievable
-* In the Gunicorn's OS service config, avoid the use of the file [mask](https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04) '000' for the Unix domain socket
 
