@@ -31,7 +31,7 @@ Further details on some of the components
 ### Prerequisites/Assumptions
 
 * A MongoDB database is already [installed](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/) or running somewhere (e.g. a local single instance, a remote self-managed cluster or an [Atlas](https://www.mongodb.com/cloud/atlas) cluster in the public cloud)
-* These instructions assume the host OS is Ubuntu 20.40 - most of the steps should be easily transferable to other OSes but some minor tweaks may be required
+* These instructions assume the host OS is Ubuntu 20.40 - most of the steps should be easily transferable to other OSes but some minor tweaks may be required (some AWS EC2 Amazon Linux 2 [notes](docs/aws_al2_install.md) also exist)
 * If the option of running the application via a Docker container is to be used, ensure the local OS has [Docker](https://docs.docker.com/get-docker/) already installed and running
 
 _NOTE_: See [here](docs/how-created.md) for details on how the original _skeleton_ outline for the client-tier Vue.js part of the project was created.
@@ -163,10 +163,11 @@ WantedBy=multi-user.target
 
 4. Enable and start the Gunicorn OS service and then view the output of the running Gunicorn/Flask/Python REST API app-tier code:
 ```bash
+sudo systemctl daemon-reload
 sudo systemctl start gunicorn-flask-books
-sudo systemctl enable gunicorn-flask-books
-sudo systemctl status gunicorn-flask-books
+sudo systemctl status -l gunicorn-flask-books
 journalctl -u gunicorn-flask-books
+sudo systemctl enable gunicorn-flask-books
 ```
 
 5. Disable the default site for Nginx (which listens to port 80), by removing the symbolic link for it:
@@ -202,6 +203,7 @@ server {
 sudo ln -s /etc/nginx/sites-available/books-vue-flask-pymongo /etc/nginx/sites-enabled/books-vue-flask-pymongo
 sudo nginx -t
 sudo service nginx restart
+sudo service nginx status -l
 ```
 
 8. In a browser, check that the Python books REST API still works (now served by Nginx proxying to Gunicorn, which in turn is wrapping Flask), check that client user interface is now served as static content from the Nginx web server (now served from the same port 5000 rather than port 8080), and ensure this is able to invoke the REST API and display the books data in the browser:
