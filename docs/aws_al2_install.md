@@ -150,7 +150,7 @@ User=ec2-user
 Group=nginx
 WorkingDirectory=/home/ec2-user/books-vue-flask-pymongo-master/app-tier
 Environment="PATH=/home/ec2-user/.local/bin"
-ExecStart=/home/ec2-user/.local/bin/gunicorn --workers 4 --threads 2 --bind unix:/var/www-data/booksnginxgunicorn.sock -m 007 BooksRestApp:app
+ExecStart=/home/ec2-user/.local/bin/gunicorn --workers 8 --threads 2 --bind unix:/var/www-data/booksnginxgunicorn.sock -m 007 BooksRestApp:app
 
 [Install]
 WantedBy=multi-user.target

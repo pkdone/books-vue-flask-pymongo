@@ -259,5 +259,4 @@ sudo docker run -e "MONGODB_URL=mongodb://172.17.0.1:27017" -e "WORKER_PROCESSES
 # Potential TODOs For The Future
 
 * Secure application with TLS and a Server certificate
-* Load test the Gunicorn/Flask/Python REST API to determine what throughput and average response latency is achievable
 
