@@ -9,7 +9,7 @@ An example full stack application, primarily developed in Python, which displays
 * Provide an example of an easy way to develop a full stack application, for developers who prefer using Python, without needing to use JavaScript to develop the app-tier logic or needing to leverage Node.js to run the application in Production. 
 * Enable the app-tier to be scalable, with a simple non-invasive way of leveraging multiple host server cores/processes, without being constrained by Python's Global Interpreter Lock (GIL), in a way that enables the developer to just focus on writing normal Python code.
 * Host the data-tier on a [MongoDB](https://www.mongodb.com/) database for flexibility, high availability, scalability and portability reasons.
-* Use JavaScript in the client-tier, in the browser where JavaScript shines, to avoid server-side rendering of the user interface and to provide a more responsive and smooth user experience, realised as a Single Page Application ([SPA](https://en.wikipedia.org/wiki/Single-page_application)) and loaded into the browser as a set of static resources (bundled as a [Webpack](https://webpack.js.org/)).
+* Use JavaScript in the client-tier, in the browser where JavaScript shines, to avoid server-side rendering of the user interface and to provide a more responsive and smooth user experience, realised as a Single Page Application ([SPA](https://en.wikipedia.org/wiki/Single-page_application)) and loaded into the browser as a set of static resources (a.k.a. [Jamstack](https://jamstack.org/), bundled as a [Webpack](https://webpack.js.org/)).
  
 ### Application Architecture
 
